@@ -1,0 +1,33 @@
+import { ClassType } from "class-transformer/ClassTransformer";
+import { ResponseModel } from "../Portfolio-Platform-Common/ResponseModel";
+import { ObjectType, Repository } from "typeorm";
+import { DtoBase } from "../Portfolio-Platform-Dtos/DtoBase/dtobase";
+import { RequestModel } from "../Portfolio-Platform-Common/RequestModel";
+import { HttpService } from "@nestjs/common";
+import { EntityBase } from "../Portfolio-Platform-Entities/EntityBase/entitybase";
+import { SNS_SQS } from "../Portfolio-Platform-RabbitMQConfig/SNS_SQS";
+export default class AppService<TEntity extends EntityBase, TDto extends DtoBase> {
+    http: HttpService;
+    readonly genericRepository: Repository<TEntity>;
+    private type3;
+    private entityClassType;
+    private dtoClassType;
+    private entityMap;
+    private dtoMap;
+    private entityToDtoMap;
+    private dtoToEntitymap;
+    private dict;
+    sns_sqs: SNS_SQS;
+    constructor(http: HttpService, genericRepository: Repository<TEntity>, type3: ObjectType<TEntity>, entityClassType: ClassType<TEntity>, dtoClassType: ClassType<TDto>, entityMap: Record<string, unknown>, dtoMap: Record<string, unknown>, entityToDtoMap: Record<string, unknown>, dtoToEntityMap: Record<string, unknown>);
+    addDtoMap(map: Record<string, unknown>): void;
+    addEntityMap(map: Record<string, unknown>): void;
+    addEntityToDtoMap(map: Record<string, unknown>): void;
+    addDtoToEntityMap(map: Record<string, unknown>): void;
+    mapToDto(entities: TEntity[]): Promise<TDto[]>;
+    mapToEntity(dtos: TDto[]): Promise<TEntity[]>;
+    getAll(page?: number, limit?: number): Promise<ResponseModel<TDto>>;
+    create(entity: RequestModel<TDto>): Promise<ResponseModel<TDto>>;
+    updateEntity(dtos: RequestModel<TDto>): Promise<ResponseModel<TDto>>;
+    deleteById(ids: any[]): Promise<ResponseModel<TDto>>;
+    getByIds(id: any[]): Promise<ResponseModel<TDto>>;
+}
